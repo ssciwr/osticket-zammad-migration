@@ -12,8 +12,9 @@ def get_osticket_data() -> pd.DataFrame:
 
     cur.execute("SELECT ticket_id, number, user_id, user_email_id, email_id, lastupdate, created, updated FROM ost_ticket limit 2")
     df = pd.DataFrame(cur.fetchall(), columns=[i[0] for i in cur.description])
+    df.head()
 
-    cur.execute("SELECT * FROM ost_user limit 2")
+    cur.execute("SELECT user_id, address FROM ost_user_email limit 2")
 
     for x in cur:
         print(x)
