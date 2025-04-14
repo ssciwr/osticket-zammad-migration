@@ -10,18 +10,27 @@ def get_osticket_data() -> pd.DataFrame:
 
     cur = cnx.cursor(buffered=True)
 
-    cur.execute("SELECT ticket_id, number, user_id, user_email_id, email_id, lastupdate, created, updated FROM ost_ticket limit 2")
+    # tickets
+    cur.execute("SELECT ticket_id, number, user_id, user_email_id, email_id, lastupdate, created, updated FROM ost_ticket limit 20")
     df = pd.DataFrame(cur.fetchall(), columns=[i[0] for i in cur.description])
     df.head()
 
-    cur.execute("SELECT user_id, address FROM ost_user_email limit 2")
+    # email addresses
+    cur.execute("SELECT user_id, address FROM ost_user_email")
+    df_email = pd.DataFrame(cur.fetchall(), columns=cur.description)
+    df_email.set_index('user_id', inplace=True)
+    df_email.head()
+    df.join(df_email, on='user_id', how='left')
+    df.drop('user_id', axis=1, inplace=True)
+    df.head()
 
-    for x in cur:
-        print(x)
-
-    cur.execute("SELECT * FROM ost_user_email limit 2")
-
-    for x in cur:
-        print(x)
+    # users
+    cur.execute("SELECT id, name FROM ost_user")
+    df_user = pd.DataFrame(cur.fetchall(), columns=cur.description)
+    df_user.set_index('id', inplace=True)
+    df_user.head()
+    df.join(df_user, on='user_id', how='left')
+    df.drop('user_id', axis=1, inplace=True)
+    df.head()
 
     return df
