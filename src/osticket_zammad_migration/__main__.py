@@ -9,7 +9,7 @@ def main():
         level=logging.DEBUG,
         format="%(asctime)s :: %(levelname)s :: %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
-        filename="osticket-zammad-migration.log",
+        handlers=[logging.FileHandler("osticket-zammad-migration.log")],
     )
     delete_all_existing_tickets = click.confirm(
         "Delete all existing Zammad tickets?", default=False

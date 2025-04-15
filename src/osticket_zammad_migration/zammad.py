@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+import click
 import json
 import logging
 from zammad_py import ZammadAPI
@@ -135,12 +136,13 @@ def migrate_tickets(delete_all_existing_tickets: bool, dry_run: bool):
     df_threads = get_threads(cur)
 
     # migrate each ticket
-    for ticket_id, ticket_row in df_tickets.iterrows():
-        logging.info(f"Migrating osticket {ticket_id} (#{ticket_row['number']})")
-        # get all threads for this ticket
-        threads = df_threads.loc[df_threads["ticket_id"] == ticket_id]
-        if len(threads) == 0:
-            logging.warning(f"Ticket {ticket_id} has no threads - ignoring")
-            continue
-        logging.info(f"  - found {len(threads)} thread(s) for this ticket")
-        _create_ticket(cur, ticket_id, ticket_row, threads, dry_run)
+    with click.progressbar(df_tickets.iterrows()) as rows:
+        for ticket_id, ticket_row in rows:
+            logging.info(f"Migrating osticket {ticket_id} (#{ticket_row['number']})")
+            # get all threads for this ticket
+            threads = df_threads.loc[df_threads["ticket_id"] == ticket_id]
+            if len(threads) == 0:
+                logging.warning(f"Ticket {ticket_id} has no threads - ignoring")
+                continue
+            logging.info(f"  - found {len(threads)} thread(s) for this ticket")
+            _create_ticket(cur, ticket_id, ticket_row, threads, dry_run)
