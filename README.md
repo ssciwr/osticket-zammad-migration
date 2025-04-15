@@ -1,6 +1,6 @@
 # osticket-zammad-migration
 
-This script exports all tickets from osticket and re-creates them in zammad.
+This script exports all tickets from osticket and re-creates them in Zammad.
 
 This script needs to run on `ssc-ticket` (where the osticket mysql database is running) with these env vars set:
 
