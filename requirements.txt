@@ -1,5 +1,0 @@
-mysql-connector-python
-pandas
-zammad-py
-requests
-urllib3
