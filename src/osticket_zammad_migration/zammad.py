@@ -11,6 +11,16 @@ import mysql.connector
 from mysql.connector.abstracts import MySQLCursorAbstract
 
 
+def make_valid_body_string(body: str) -> str:
+    """
+    Zammad gives an error if an empty body is provided for an article, so we return "-" in this case
+    """
+    if len(body) == 0 or body == "\xa0":
+        return "-"
+    else:
+        return body
+
+
 def _article_from_thread(
     cur: MySQLCursorAbstract,
     zammad_ticket_id: int,
@@ -37,7 +47,7 @@ def _article_from_thread(
     return {
         "ticket_id": zammad_ticket_id,
         "subject": thread_row["title"],
-        "body": thread_row["body"] if len(thread_row["body"]) > 0 else "-",
+        "body": make_valid_body_string(thread_row["body"]),
         "type": "email",
         "internal": False,
         "content_type": "text/html" if thread_row["format"] == "html" else "text/plain",
