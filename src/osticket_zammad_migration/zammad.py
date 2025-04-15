@@ -37,7 +37,7 @@ def _article_from_thread(
     return {
         "ticket_id": zammad_ticket_id,
         "subject": thread_row["title"],
-        "body": thread_row["body"],
+        "body": thread_row["body"] if len(thread_row["body"]) > 0 else "-",
         "type": "email",
         "internal": False,
         "content_type": "text/html" if thread_row["format"] == "html" else "text/plain",

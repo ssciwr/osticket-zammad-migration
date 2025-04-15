@@ -9,12 +9,15 @@ This script needs to run on `ssc-ticket` (where the osticket mysql database is r
 
 To run:
 
-- pip install .
-- osticket-zammad-migration
+- `pip install .`
+- `osticket-zammad-migration`
 
 ```bash
-liam@ssc-ticket:~$ osticket-zammad-migration
+(migration) liam@ssc-ticket:~$ osticket-zammad-migration
 Delete all existing Zammad tickets? [y/N]: y
 Dry run without making any changes? [Y/n]: n
 Do you want to continue? [Y/n]: y
+#243974:  58%|███████████████████████████████▍                      | 1416/2430 [10:55<05:42,  2.96it/s]
 ```
+
+Logs are written to `osticket-zammad-migration.log`.
