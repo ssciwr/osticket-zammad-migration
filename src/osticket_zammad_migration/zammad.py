@@ -100,6 +100,8 @@ def _delete_all_existing_tickets(dry_run: bool):
     DANGER!! Deletes all existing tickets in Zammad.
     """
     logging.warning("Deleting all existing Zammad tickets")
+    if dry_run:
+        return
     with no_ssl_verification():
         client = ZammadAPI(
             url="https://ssc-support.iwr.uni-heidelberg.de/api/v1/",
@@ -110,8 +112,7 @@ def _delete_all_existing_tickets(dry_run: bool):
         while page:
             for ticket in page:
                 logging.warning(f"  - deleting ticket {ticket['id']}")
-                if not dry_run:
-                    client.ticket.destroy(ticket["id"])
+                client.ticket.destroy(ticket["id"])
             page = client.ticket.all()
 
 
@@ -134,9 +135,12 @@ def migrate_tickets(delete_all_existing_tickets: bool, dry_run: bool):
     df_threads = get_threads(cur)
 
     # migrate each ticket
-    for ticket_id, ticket_row in df_tickets.tail(20).iterrows():
+    for ticket_id, ticket_row in df_tickets.iterrows():
         logging.info(f"Migrating osticket {ticket_id} (#{ticket_row['number']})")
         # get all threads for this ticket
         threads = df_threads.loc[df_threads["ticket_id"] == ticket_id]
+        if len(threads) == 0:
+            logging.warning(f"Ticket {ticket_id} has no threads - ignoring")
+            continue
         logging.info(f"  - found {len(threads)} thread(s) for this ticket")
         _create_ticket(cur, ticket_id, ticket_row, threads, dry_run)

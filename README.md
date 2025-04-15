@@ -13,11 +13,8 @@ To run:
 - osticket-zammad-migration
 
 ```bash
-Usage: osticket-zammad-migration [OPTIONS]
-
-Options:
-  --delete-all-existing-tickets  Delete all existing tickets in Zammad before
-                                 migrating.
-  --dry-run                      Perform a dry run without making any changes.
-  --help                         Show this message and exit.
+liam@ssc-ticket:~$ osticket-zammad-migration
+Delete all existing Zammad tickets? [y/N]: y
+Dry run without making any changes? [Y/n]: n
+Do you want to continue? [Y/n]: y
 ```
