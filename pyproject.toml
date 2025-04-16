@@ -1,0 +1,27 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "osticket-zammad-migration"
+description = "Script to migrate tickets from osticket to zammad"
+readme = "README.md"
+license = { text = "NONE" }
+authors = [{ name = "SSC", email = "ssc@iwr.uni-heidelberg.de" }]
+requires-python = ">=3.10"
+dependencies = [
+    "mysql-connector-python",
+    "pandas",
+    "requests",
+    "urllib3",
+    "zammad-py",
+    "click",
+    "tqdm",
+]
+version = "1.0.0"
+
+[project.scripts]
+osticket-zammad-migration = "osticket_zammad_migration.__main__:main"
+
+[tool.ruff.lint.isort]
+force-single-line = true
